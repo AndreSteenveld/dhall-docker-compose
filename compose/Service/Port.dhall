@@ -1,20 +1,19 @@
-let Port = { }
+let `List/fold` = https://prelude.dhall-lang.org/List/fold
 
-let default_port = {=}
-
-let combine 
-    : Port -> Port -> Port
-    = \( left : Port ) -> \( right : Port ) ->
-        default_port // left // right // {
-
-            -- Merging 
-
-        }
-
-let mixin = \( mixins : List Port ) -> \( target : Service ) -> List/fold Port mixins Port combine target
-
-in {
-    , Type    = Port
-    , default = default_port
-    , combine, mixin
+let Port : Type = { 
+    , mode      : Optional Text
+    , target    : Natural
+    , published : Natural
+    , protocol  : Optional Text
 }
+let default = {
+    , mode      = None Text
+    , protocol  = None Text
+}
+
+let combine = \( left : Port ) -> \( right : Port ) ->
+    ( default // left // right ) : Port
+
+let mixin = \( mixins : List Port ) -> \( target : Port ) -> List/fold Port mixins Port combine target
+
+in { Type = Port, default, combine, mixin }

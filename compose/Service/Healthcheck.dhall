@@ -1,20 +1,11 @@
-let Healthcheck = { }
+let `List/fold` = https://prelude.dhall-lang.org/List/fold
 
-let default_healthcheck = {=}
+let Healthcheck : Type = { }
+let default : Healthcheck = {=}
 
-let combine 
-    : Healthcheck -> Healthcheck -> Healthcheck
-    = \( left : Healthcheck ) -> \( right : Healthcheck ) ->
-        default_healthcheck // left // right // {
+let combine = \( left : Healthcheck ) -> \( right : Healthcheck ) ->
+    ( default // left // right ) : Healthcheck
 
-            -- Merging 
+let mixin = \( mixins : List Healthcheck ) -> \( target : Healthcheck ) -> List/fold Healthcheck mixins Healthcheck combine target
 
-        }
-
-let mixin = \( mixins : List Healthcheck ) -> \( target : Service ) -> List/fold Healthcheck mixins Healthcheck combine target
-
-in {
-    , Type    = Healthcheck
-    , default = default_healthcheck
-    , combine, mixin
-}
+in { Type = Healthcheck, default, combine, mixin }

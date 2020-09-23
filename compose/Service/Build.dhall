@@ -1,28 +1,40 @@
+let `List/fold` = https://prelude.dhall-lang.org/List/fold
 
+let Map = https://prelude.dhall-lang.org/Map/Type
 
-let Build = { }
+let Build : Type = { 
 
-let default_build = {=}
+    , context       : Optional Text
+    , dockerfile    : Optional Text
+    , args          : Optional ( Map Text Text )
+    , labels        : Optional ( Map Text Text )
+    , cache_from    : Optional ( List Text )
+    , network       : Optional Text
+    , target        : Optional Text
+    , shm_size      : Optional Text
+    , extra_hosts   : Optional ( Map Text Text )
+    , isolation     : Optional Text
 
-let combine 
-    : Build -> Build -> Build
-    = \( left : Build ) -> \( right : Build ) ->
-        default_build // left // right // {
-
-            -- Merging 
-
-        }
-
-let mixin = \( mixins : List Build ) -> \( target : Service ) -> List/fold Build mixins Build combine target
-
-let constructor = \( value : < Text | Build > ) ->
-    merge {
-        , Text  = \( value : Text ) -> Build::{=}
-        , Build = \( value : Build ) -> value
-    }
-
-in {
-    , Type    = Build
-    , default = default_build
-    , combine, mixin, constructor
 }
+
+let default : Build = {
+
+    , context       = None Text
+    , dockerfile    = None Text
+    , args          = None ( Map Text Text )
+    , labels        = None ( Map Text Text )
+    , cache_from    = None ( List Text )
+    , network       = None Text
+    , target        = None Text
+    , shm_size      = None Text
+    , extra_hosts   = None ( Map Text Text )
+    , isolation     = None Text
+
+}
+
+let combine = \( left : Build ) -> \( right : Build ) ->
+    ( default // left // right ) : Build
+
+let mixin = \( mixins : List Build ) -> \( target : Build ) -> List/fold Build mixins Build combine target
+
+in { Type = Build, default, combine, mixin }

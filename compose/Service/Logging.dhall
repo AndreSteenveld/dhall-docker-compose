@@ -1,24 +1,19 @@
-let Logging = { }
+let `List/fold` = https://prelude.dhall-lang.org/List/fold
 
-let default_logging = {=}
+let Map = https://prelude.dhall-lang.org/Map/Type
 
-let combine 
-    : Logging -> Logging -> Logging
-    = \( left : Logging ) -> \( right : Logging ) ->
-        default_logging // left // right // {
-
-            -- Merging 
-
-        }
-
-let mixin = \( mixins : List Logging ) -> \( target : Service ) -> List/fold Logging mixins Logging combine target
-
-in {
-    , Type    = Logging
-    , default = default_logging
-    , combine, mixin
+let Logging : Type = { 
+    , driver  : Text
+    , options : Map Text Text
 }
+let default = {=}
 
+let combine = \( left : Logging ) -> \( right : Logging ) ->
+    ( default // left // right ) : Logging
+
+let mixin = \( mixins : List Logging ) -> \( target : Logging ) -> List/fold Logging mixins Logging combine target
+
+in { Type = Logging, default, combine, mixin }
   {-
         JSON.types?
         Logging::{

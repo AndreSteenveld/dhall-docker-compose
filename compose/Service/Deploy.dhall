@@ -1,20 +1,11 @@
-let Deploy = { }
+let `List/fold` = https://prelude.dhall-lang.org/List/fold
 
-let default_deploy = {=}
+let Deploy : Type = { }
+let default : Deploy = {=}
 
-let combine 
-    : Deploy -> Deploy -> Deploy
-    = \( left : Deploy ) -> \( right : Deploy ) ->
-        default_deploy // left // right // {
+let combine = \( left : Deploy ) -> \( right : Deploy ) ->
+    ( default // left // right ) : Deploy
 
-            -- Merging 
+let mixin = \( mixins : List Deploy ) -> \( target : Deploy ) -> List/fold Deploy mixins Deploy combine target
 
-        }
-
-let mixin = \( mixins : List Deploy ) -> \( target : Service ) -> List/fold Deploy mixins Deploy combine target
-
-in {
-    , Type    = Deploy
-    , default = default_deploy
-    , combine, mixin
-}
+in { Type = Deploy, default, combine, mixin }
