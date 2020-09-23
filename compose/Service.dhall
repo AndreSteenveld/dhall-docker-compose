@@ -99,7 +99,7 @@ let Service = {
     , working_dir   : Optional Text
 }
 
-let default_service = { 
+let default = { 
     , blkio_config  = None BlockIOConfig.Type
     , build         = None Build.Type
     , cap_add       = None ( List Text )
@@ -177,7 +177,7 @@ let default_service = {
 let combine 
     : Service -> Service -> Service 
     = \( left : Service ) -> \( right : Service ) -> 
-        ( default_service // left // right ) : Service {-
+        ( default // left // right ) : Service {-
 
             -- 
             -- Merging a service is fine as for most of the complex object we can pawn that off
@@ -203,9 +203,7 @@ let combine
 let mixin = \( mixins : List Service ) -> \( target : Service ) -> List/fold Service mixins Service combine target
 
 in {
-    , Type    = Service
-    , default = default_service
-    , combine, mixin
+    , Type = Service , default , combine , mixin
 
     --
     -- Some convienence methods
