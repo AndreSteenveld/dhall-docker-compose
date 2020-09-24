@@ -13,17 +13,17 @@ let Secret  = ./Secret.dhall
 let File = {
 
     , version  : Text
-    , services : Optional ( Map Text Service.Type )
-    , networks : Optional ( Map Text Network.Type )
-    , volumes  : Optional ( Map Text Volume.Type )
+    -- , services : Optional ( Map Text Service.Type )
+    -- , networks : Optional ( Map Text Network.Type )
+    -- , volumes  : Optional ( Map Text Volume.Type )
 
     -- Configs and secrets are only relevant in swarm deployments
-    , configs : Optional ( Map Text Config.Type )
-    , secrets : Optional ( Map Text Secret.Type )
+    -- , configs : Optional ( Map Text Config.Type )
+    -- , secrets : Optional ( Map Text Secret.Type )
 
 }
 
-let default = {
+let default = {=} {-
 
     , services = None ( Map Text Service.Type )
     , networks = None ( Map Text Network.Type )
@@ -31,7 +31,7 @@ let default = {
     , configs  = None ( Map Text Config.Type )
     , secrets  = None ( Map Text Secret.Type )
 
-}
+-}
 
 let combine 
     : File -> File -> File 
